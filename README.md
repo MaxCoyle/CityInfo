@@ -3,4 +3,4 @@ Based on the Puralsight tutorial "Building Your First API with ASP.NET Core" by 
 
 ## Additions
 
-* Swagger Documetation
+* Swagger Documetation - https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-help-pages-using-swagger?view=aspnetcore-2.1
