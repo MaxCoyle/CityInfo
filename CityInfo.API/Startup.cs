@@ -1,4 +1,5 @@
-﻿using CityInfo.API.Services;
+﻿using CityInfo.API.Repository;
+using CityInfo.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -13,6 +14,9 @@ namespace CityInfo.API
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            const string connectionString = @"Data source=(local);Initial catalog=CityInfo;Integrated Security=SSPI;";
+            services.AddTransient(provider => new CityRepository(connectionString, conn => new UnitOfWork(conn)));
+
             services.AddMvc()
                 .AddMvcOptions(o => o.OutputFormatters.Add(
                     new XmlDataContractSerializerOutputFormatter()));
@@ -36,7 +40,7 @@ namespace CityInfo.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, CityRepository cityRepository)
         {
             loggerFactory.AddConsole();
             loggerFactory.AddDebug(LogLevel.Information);
@@ -57,6 +61,8 @@ namespace CityInfo.API
             {
                 c.SwaggerEndpoint("../swagger/CityInfo/swagger.json", "City Information");
             });
+
+            cityRepository.GetAllCities();
 
             app.UseMvc();
         }
