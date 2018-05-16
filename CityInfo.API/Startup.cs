@@ -1,8 +1,10 @@
-﻿using CityInfo.API.Repository;
+﻿using System.IO;
+using CityInfo.API.Repository;
 using CityInfo.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -10,6 +12,8 @@ namespace CityInfo.API
 {
     public class Startup
     {
+        public static IConfiguration Configuration { get; set; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
@@ -17,6 +21,14 @@ namespace CityInfo.API
             services.AddMvc()
                 .AddMvcOptions(o => o.OutputFormatters.Add(
                     new XmlDataContractSerializerOutputFormatter()));
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
+
+            Configuration = builder.Build();
+
+            services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddSwaggerGen(swagger =>
                 {
@@ -29,7 +41,7 @@ namespace CityInfo.API
                 }
             );
 
-            services.AddTransient<CityInfoRepository>(cityInfoRepository => new CityInfoRepository());
+            services.AddTransient<CityInfoRepository>(cityInfoRepository => new CityInfoRepository(Configuration));
             services.AddTransient<ICityInfoRepository, CityInfoRepository>();
 #if DEBUG
             services.AddTransient<IMailService, LocalMailService>();

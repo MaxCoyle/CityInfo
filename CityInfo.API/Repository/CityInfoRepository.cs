@@ -12,9 +12,9 @@ namespace CityInfo.API.Repository
         private readonly string _connectionString;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CityInfoRepository()
+        public CityInfoRepository(IConfiguration configuration)
         {
-            _connectionString = @"Data source=(local);Initial catalog=CityInfo;Integrated Security=SSPI;";  // Move into config file
+            _connectionString = configuration.GetConnectionString("CityInfoConnection");
             IUnitOfWork UnitOfWorkFunc(SqlConnection conn) => new UnitOfWork(conn);
             _unitOfWork = UnitOfWorkFunc(GetConnection());
         }
