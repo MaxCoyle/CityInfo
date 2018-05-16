@@ -2,7 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 
-namespace CityInfo.API
+namespace CityInfo.API.Repository
 {
     public class QueryFilter
     {
@@ -14,13 +14,6 @@ namespace CityInfo.API
 
         public readonly object Param;
         public readonly string Clause;
-    }
-
-    public interface IUnitOfWork : IDisposable
-    {
-        IUnitOfWork Begin();
-        void Commit(Action<SqlConnection, SqlTransaction> doWork);
-        void Rollback();
     }
 
     public class UnitOfWork : IUnitOfWork

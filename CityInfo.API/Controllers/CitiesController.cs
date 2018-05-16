@@ -1,6 +1,5 @@
 ﻿using CityInfo.API.Repository;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace CityInfo.API.Controllers
 {
