@@ -1,21 +1,22 @@
 ﻿using CityInfo.API.Models;
 using Dapper;
-using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace CityInfo.API.Repository
 {
-    public class CityRepository : ICityRepository
+    public class CityInfoRepository : ICityInfoRepository
     {
         private readonly string _connectionString;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CityRepository(string connectionString, Func<SqlConnection, IUnitOfWork> createUnitOfWork)
+        public CityInfoRepository()
         {
-            _connectionString = connectionString;
-            _unitOfWork = createUnitOfWork(GetConnection());
+            _connectionString = @"Data source=(local);Initial catalog=CityInfo;Integrated Security=SSPI;";  // Move into config file
+            IUnitOfWork UnitOfWorkFunc(SqlConnection conn) => new UnitOfWork(conn);
+            _unitOfWork = UnitOfWorkFunc(GetConnection());
         }
 
         private SqlConnection GetConnection()
@@ -61,6 +62,13 @@ namespace CityInfo.API.Repository
         public IEnumerable<CityDto> GetAllCities()
         {
             return GetCities();
+        }
+
+        public CityDto GetByCityId(int cityId)
+        {
+            var queryParam = new { cityId };
+            var queryFilter = new QueryFilter(queryParam, "WHERE City.Id = @CityId");
+            return GetCities(queryFilter).FirstOrDefault();
         }
     }
 }

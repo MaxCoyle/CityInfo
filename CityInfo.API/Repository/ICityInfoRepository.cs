@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 namespace CityInfo.API.Repository
 {
-    public interface ICityRepository
+    public interface ICityInfoRepository
     {
         IEnumerable<CityDto> GetAllCities();
+
+        CityDto GetByCityId(int cityId);
     }
 }
