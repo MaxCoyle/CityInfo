@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CityInfo.API.Repository
 {
-    public interface ICityInfoRepository
+    public interface ICitiesRepository
     {
         IEnumerable<CityDto> GetAllCities();
 

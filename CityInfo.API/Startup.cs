@@ -41,8 +41,8 @@ namespace CityInfo.API
                 }
             );
 
-            services.AddTransient<CityInfoRepository>(cityInfoRepository => new CityInfoRepository(Configuration));
-            services.AddTransient<ICityInfoRepository, CityInfoRepository>();
+            services.AddTransient<CitiesRepository>(cityInfoRepository => new CitiesRepository(Configuration));
+            services.AddTransient<ICitiesRepository, CitiesRepository>();
 #if DEBUG
             services.AddTransient<IMailService, LocalMailService>();
 #else
@@ -51,7 +51,7 @@ namespace CityInfo.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, CityInfoRepository cityRepository)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, CitiesRepository cityRepository)
         {
             loggerFactory.AddConsole();
             loggerFactory.AddDebug(LogLevel.Information);

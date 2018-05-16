@@ -7,24 +7,23 @@ namespace CityInfo.API.Controllers
     [Route("api/cities")]
     public class CitiesController : Controller
     {
-        private readonly ICityInfoRepository _cityInfoRepository;
+        private readonly ICitiesRepository _citiesRepository;
 
-        public CitiesController(ICityInfoRepository cityInfoRepository)
+        public CitiesController(ICitiesRepository cityInfoRepository)
         {
-            _cityInfoRepository = cityInfoRepository;
+            _citiesRepository = cityInfoRepository;
         }
 
         [HttpGet]
         public IActionResult GetCities()
         {
-            return Ok(_cityInfoRepository.GetAllCities());
+            return Ok(_citiesRepository.GetAllCities());
         }
 
         [HttpGet("{id}")]
         public IActionResult GetCity(int id)
         {
-            //var cityToReturn = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == id);
-            var cityToReturn = _cityInfoRepository.GetByCityId(id);
+            var cityToReturn = _citiesRepository.GetByCityId(id);
             if (cityToReturn == null)
             {
                 return NotFound();

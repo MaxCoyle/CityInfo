@@ -7,12 +7,12 @@ using Microsoft.Extensions.Configuration;
 
 namespace CityInfo.API.Repository
 {
-    public class CityInfoRepository : ICityInfoRepository
+    public class CitiesRepository : ICitiesRepository
     {
         private readonly string _connectionString;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CityInfoRepository(IConfiguration configuration)
+        public CitiesRepository(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("CityInfoConnection");
             IUnitOfWork UnitOfWorkFunc(SqlConnection conn) => new UnitOfWork(conn);
