@@ -1,12 +1,13 @@
-﻿using System.IO;
-using CityInfo.API.Repository;
-using CityInfo.API.Services;
+﻿using CityInfo.API.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using System.IO;
+using System.Net.Mime;
 using Microsoft.Extensions.Logging;
 
 namespace CityInfo.API
@@ -31,6 +32,8 @@ namespace CityInfo.API
 
             services.AddSingleton<IConfiguration>(Configuration);
 
+            services.AddLogging(b => b.AddSerilog(dispose: true));
+
             services.AddSwaggerGen(swagger =>
                 {
                     swagger.DescribeAllEnumsAsStrings();
@@ -44,19 +47,11 @@ namespace CityInfo.API
 
             services.AddTransient<CitiesRepository>(cityInfoRepository => new CitiesRepository(Configuration));
             services.AddTransient<ICitiesRepository, CitiesRepository>();
-#if DEBUG
-            services.AddTransient<IMailService, LocalMailService>();
-#else
-            services.AddTransient<IMailService, CloudMailService>();
-#endif
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            loggerFactory.AddConsole();
-            loggerFactory.AddDebug(LogLevel.Information);
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

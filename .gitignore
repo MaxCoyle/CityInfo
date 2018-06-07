@@ -3,3 +3,4 @@ CityInfo.API/bin/
 CityInfo.API/obj/Debug/
 CityInfo.API/obj/Release/
 .vs/
+out.backup/

@@ -11,15 +11,6 @@ namespace CityInfo.API.Controllers
     [Route("api/cities")]
     public class PointsOfInterestController : Controller
     {
-        private readonly ILogger<PointsOfInterestController> _logger;
-        private readonly IMailService _mailService;
-
-        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, IMailService mailService)
-        {
-            _logger = logger;
-            _mailService = mailService;
-        }
-        
         [HttpGet("{cityId}/pointsofinterest")]
         public IActionResult GetPointsOfInterest(int cityId)
         {
@@ -28,13 +19,11 @@ namespace CityInfo.API.Controllers
                 var city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == cityId);
 
                 if (city != null) return Ok(city.PointsOfInterest);
-                _logger.LogInformation($"city with id {cityId} wasn't found when accessing points of interest.");
                 return NotFound();
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogCritical($"Exception while getting points of interest of city with id {cityId}.", ex);
                 return StatusCode(500, "A problem happened while hanling your request.");
             }
         }
@@ -212,11 +201,7 @@ namespace CityInfo.API.Controllers
             }
 
             city.PointsOfInterest.Remove(pointOfInterestFromStore);
-
-            _mailService.Send("Point of interest deleted.",
-                $"Point of interest {pointOfInterestFromStore.Name} with id {pointOfInterestFromStore.Id} was deleted.");
-
-
+     
             return NoContent();
         }
     }
